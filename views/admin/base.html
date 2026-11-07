@@ -13,6 +13,8 @@
            href="{{ url_for('admin.usuarios_lista') }}">Usuarios</a>
         <a class="nav__link {% if request.endpoint.startswith('admin.evento') %}nav__link--active{% endif %}"
            href="{{ url_for('admin.eventos_lista') }}">Eventos académicos</a>
+        <a class="nav__link" {% if request.endpoint.startswith('admin.alerta') %}nav__link--active{% endif %} 
+            href="{{url_for('admin.alertas_lista')}}">Alertas</a>
         <span class="nav__user">{{session.get('nombre')}}</span>
         <form method="POST" action="{{url_for('auth.logout')}}">
             <button class="button button--secondary" type="submit">Cerrar Sesión</button>

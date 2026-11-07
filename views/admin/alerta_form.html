@@ -1,0 +1,77 @@
+{% extends "admin/base.html" %}
+
+{% block titulo %}Nueva alerta{% endblock %}
+
+{% block contenido %}
+    <h1 class="page__title">Nueva alerta de seguimiento</h1>
+
+    {% if errores %}
+        <ul class="message message--mistake">
+            {% for error in errores %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- Paso 1: escoger el arquetipo (GET → recarga con ?arquetipo_id=X) -->
+    <form class="form" method="GET">
+        <div class="form__field">
+            <label class="form__tag" for="arquetipo_id">Arquetipo</label>
+            <select class="form__select" id="arquetipo_id" name="arquetipo_id">
+                <option value="">-- Seleccione un arquetipo --</option>
+                {% for a in arquetipos %}
+                    <option value="{{ a.arquetipo_id }}"
+                        {% if datos.get('arquetipo_id') == a.arquetipo_id|string %}selected{% endif %}>
+                        {{ a.nombre_arquetipo }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form__actions">
+            <button class="button button--secondary" type="submit">Cargar estudiantes y técnicas</button>
+        </div>
+    </form>
+
+    <!-- Paso 2: solo aparece cuando ya hay un arquetipo elegido -->
+    {% if datos.get('arquetipo_id') %}
+    <form class="form" method="POST" novalidate>
+        <input type="hidden" name="arquetipo_id" value="{{ datos.get('arquetipo_id') }}">
+
+        <div class="form__field">
+            <label class="form__tag" for="usuario_id">Estudiante</label>
+            <select class="form__select" id="usuario_id" name="usuario_id">
+                <option value="">-- Seleccione un estudiante --</option>
+                {% for e in estudiantes %}
+                    <option value="{{ e.usuario_id }}"
+                        {% if datos.get('usuario_id') == e.usuario_id|string %}selected{% endif %}>
+                        {{ e.apellido_usuario }}, {{ e.nombre_usuario }} ({{ e.correo_usuario }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form__field">
+            <label class="form__tag" for="tecnica_id">Técnica recomendada</label>
+            <select class="form__select" id="tecnica_id" name="tecnica_id">
+                <option value="">-- Seleccione una técnica --</option>
+                {% for t in tecnicas %}
+                    <option value="{{ t.tecnicaManejoEstres_id }}"
+                        {% if datos.get('tecnica_id') == t.tecnicaManejoEstres_id|string %}selected{% endif %}>
+                        {{ t.nombre_tecnica }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form__field">
+            <label class="form__tag" for="mensaje">Mensaje</label>
+            <input class="form__input" type="text" id="mensaje" name="mensaje"
+                   value="{{ datos.get('mensaje', '') }}">
+            <small class="form__help">Máximo 100 caracteres.</small>
+        </div>
+
+        <div class="form__actions">
+            <button class="button button--primary" type="submit">Guardar</button>
+            <a class="button button--secondary" href="{{ url_for('admin.alertas_lista') }}">Cancelar</a>
+        </div>
+    </form>
+    {% endif %}
+{% endblock %}

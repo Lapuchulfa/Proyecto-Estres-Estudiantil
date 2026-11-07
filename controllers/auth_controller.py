@@ -5,7 +5,6 @@ from models.usuario_model import obtener_usuario_por_correo, existe_correo, crea
 from utils.validaciones import validar_correo, validar_password
 
 
-
 auth_bp = Blueprint("auth", __name__)
 
 def ruta_inicio(rol):
@@ -49,7 +48,7 @@ def registro():
         return redirect(ruta_inicio(session["rol"]))
     
     if request.method == "GET":
-        return render_template("auth/registro.html", datos={}, errores=[])
+        return render_template("auth/registro.html", aruquetipos=listar_arquetipos(), datos={}, errores=[])
     
     nombre = request.form.get("nombre", "").strip()
     apellido = request.form.get("apellido", "").strip()

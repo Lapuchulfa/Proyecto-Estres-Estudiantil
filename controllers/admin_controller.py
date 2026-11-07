@@ -1,12 +1,15 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.arquetipo_model import listar_arquetipos, existe_arquetipo
-from models.evento_academico_model import crear_evento, listar_eventos
-from models.usuario_model import listar_usuarios, crear_usuario, existe_correo, listar_estudiantes, es_estudiante
+from models.evento_academico_model import listar_eventos
+from models.usuario_model import listar_usuarios, crear_usuario, existe_correo, listar_estudiantes_por_arquetipo, estudiante_de_arquetipo
 from utils.validaciones import (
-    validar_correo, validar_password, validar_rol, ROLES_PERMITIDOS,
-    validar_evento, TIPOS_EVENTOS, ESTADOS_EVENTO,
+    validar_correo, validar_password, validar_rol, ROLES_PERMITIDOS
 )
 from utils.auth import exigir_rol
+from datetime import date
+from models.tecnica_manejo_model import listar_tecnica_por_arquetipo, tecnica_de_arquetipo
+from models.alerta_model import listar_alertas, crear_alerta
+
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -68,47 +71,56 @@ def usuarios_nuevo():
     crear_usuario(nombre, apellido, correo, password, rol, arquetipo_id)
     flash("Usuario creado exitosamente.", "success")
     return redirect(url_for('admin.usuarios_lista'))
-
-
-#Eventos Académicos
-
-def mostrar_formulario_evento(datos, errores, status=200):
-    return render_template(
-        "admin/evento_form.html",
-        estudiantes = listar_estudiantes(),
-        tipos = TIPOS_EVENTOS,
-        estados = ESTADOS_EVENTO,
-        datos=datos,
-        errores=errores,
-    ), status
     
 @admin_bp.route("/eventos")
 def eventos_lista():
     return render_template("admin/eventos_lista.html", eventos=listar_eventos())
 
+#Alertas
 
-@admin_bp.route("/eventos/nuevo", methods=["GET", "POST"])
-def evento_nuevo():
+def mostrar_formulario_alerta(datos, errores, status=200):
+    arquetipo_id = datos.get("arquetipo_id")
+    return render_template(
+        "admin/alerta_form.html",
+        arquetipos = listar_arquetipos(),
+        estudiantes = listar_estudiantes_por_arquetipo(arquetipo_id) if arquetipo_id else [],
+        tecnicas = listar_tecnica_por_arquetipo(arquetipo_id) if arquetipo_id else [],
+        datos = datos,
+        errores = errores,
+    ), status
+    
+@admin_bp.route("/alertas")
+def alertas_lista():
+    return render_template("admin/alertas_lista.html", alertas=listar_alertas())
+
+@admin_bp.route("/alertas/nueva", methods=["GET", "POST"])
+def alerta_nueva():
+    # # GET: si viene ?arquetipo_id=X en la URL, se cargan sus estudiantes y técnicas
     if request.method == "GET":
-        return mostrar_formulario_evento({}, [])
-
-    # Validación en back-end del dato sensible del core: el peso del evento
-    evento, errores = validar_evento(
-        request.form.get("materia"),
-        request.form.get("tipo"),
-        request.form.get("peso"),
-        request.form.get("fecha"),
-        request.form.get("estado"),
-    )
-
+        return mostrar_formulario_alerta(request.args, [])
+    
+    arquetipo_id = request.form.get("arquetipo_id")
     usuario_id = request.form.get("usuario_id")
-    if not usuario_id or not es_estudiante(usuario_id):
-        errores.append("Debe seleccionar un estudiante válido.")
+    tecnicaa_id = request.form.get("tecnica_id")
+    mensaje = request.form.get("mensaje", "").strip()
+    errores = []
+    
+    #Validacion back-end estudiante y tecnicas deben pertenecer al mismo arquetipo
+    if not arquetipo_id or not existe_arquetipo(arquetipo_id):
+        errores.append("Debe seleccionar un arquetipo valido.")
+    else:
+        if not usuario_id or not estudiante_de_arquetipo(usuario_id, arquetipo_id):
+            errores.append("El estudiante no pertenece al arquetipo seleccionado.")
+        if not tecnicaa_id or not tecnica_de_arquetipo(tecnicaa_id, arquetipo_id):
+            errores.append("La técnica no corresponde al arquetipo seleccionado.")
 
+    if not mensaje or len(mensaje) > 100:
+        errores.append("El mensaje debe ser obligatorio y no puede superar los 100 caracteres.")
+        
     if errores:
-        return mostrar_formulario_evento(request.form, errores, 400)
-
-    crear_evento(evento["materia"], evento["tipo"], evento["fecha"],
-                 evento["peso"], evento["estado"], usuario_id)
-    flash("Evento académico creado correctamente.", "success")
-    return redirect(url_for("admin.eventos_lista"))
+        return mostrar_formulario_alerta(request.form, errores, 400)
+    
+    crear_alerta(mensaje, date.today(), usuario_id, tecnicaa_id)
+    flash("Alerta de seguimiento creada correctamente.", "success")
+    return redirect(url_for("admin.alertas_lista"))
+    

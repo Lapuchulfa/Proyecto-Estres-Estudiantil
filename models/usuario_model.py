@@ -96,3 +96,35 @@ def obtener_usuario_por_correo(correo):
     cursor.close()
     conn.close()
     return usuario
+
+def listar_estudiantes_por_arquetipo(arquetipo_id):
+    conn = obtener_conexion()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute(
+        """
+        Select usuario_id, nombre_usuario, apellido_usuario, correo_usuario
+        from usuario
+        where rol = 'Estudiante' and arquetipo_id = %s
+        Order by apellido_usuario, nombre_usuario
+        """,
+        (arquetipo_id,)
+    )
+    estudiantes = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return estudiantes
+
+def estudiante_de_arquetipo(usuario_id, arquetipo_id):
+    conn = obtener_conexion()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        Select 1 from usuario
+        where usuario_id = %s and arquetipo_id = %s and rol = 'Estudiante'
+        """,
+        (usuario_id, arquetipo_id)
+    )
+    existe = cursor.fetchone() is not None
+    cursor.close()
+    conn.close()
+    return existe

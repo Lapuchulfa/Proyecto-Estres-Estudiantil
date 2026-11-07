@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+
+{% block titulo %}Alertas{% endblock %}
+
+{% block contenido %}
+    <div class="page__header">
+        <h1 class="page__title">Alertas de seguimiento</h1>
+        <a class="button button--primary" href="{{ url_for('admin.alerta_nueva') }}">+ Nueva alerta</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="table__header">Estudiante</th>
+                <th class="table__header">Técnica</th>
+                <th class="table__header">Mensaje</th>
+                <th class="table__header">Fecha</th>
+                <th class="table__header">Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for al in alertas %}
+                <tr class="table__row">
+                    <td class="table__cell">{{ al.apellido_usuario }}, {{ al.nombre_usuario }}</td>
+                    <td class="table__cell">{{ al.nombre_tecnica }}</td>
+                    <td class="table__cell">{{ al.mensaje }}</td>
+                    <td class="table__cell">{{ al.fecha }}</td>
+                    <td class="table__cell">{{ al.estado }}</td>
+                </tr>
+            {% else %}
+                <tr><td class="table__empty" colspan="5">No hay alertas registradas.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
