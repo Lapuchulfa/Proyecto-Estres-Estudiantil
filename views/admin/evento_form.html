@@ -1,0 +1,74 @@
+{% extends "admin/base.html" %}
+
+{% block titulo %}Nuevo evento académico{% endblock %}
+
+{% block contenido %}
+    <h1 class="page__title">Nuevo evento académico</h1>
+
+    {% if errores %}
+        <ul class="message message--mistake">
+            {% for error in errores %}
+            <li>{{error}}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form class="form" method="POST" novalidate> 
+        <div class="form__field">
+            <label class="form__tag" for="usuario_id">Estudiante</label>
+            <select class="form__select" id="usuario_id" name="usuario_id">
+                <option value="">-- Seleccione un estudiante --</option>
+                {% for e in estudiantes %}
+                    <option value="{{e.usuario_id}}"
+                    {% if datos.get('usuario_id') == e.usuario_id|string %} selected {% endif %}>
+                    {{e.apellido_usuario}}, {{e.nombre_usuario}} ({{e.correo_usuario}})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form__field">
+            <label class="form__tag" for="materia">Materia</label>
+            <input class="form__input" type="text" id="materia" name="materia"
+                    value="{{datos.get('materia','')}}">
+        </div>
+
+        <div class="form__field">
+            <label class="form__tag" for="tipo">Tipo</label>
+            <select class="form__select" id="tipo" name="tipo">
+                {% for tipo, rango in tipos.items() %}
+                    <option value="{{tipo}}" {% if datos.get('tipo') == tipo %}selected{% endif %}>
+                        {{tipo}} (peso {{rango[0]}} - {{rango[1]}})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form__field">
+            <label class="form__tag" for="peso">Peso</label>
+            <input class="form__input" type="number" step="0.1" id="peso" name="peso"
+                    value="{{datos.get('peso','')}}">
+            <small class="form__help">Debe estar dentro del rango del tipo elegido.</small>
+        </div>
+
+        <div class="form__field">
+            <label class="form__tag" for="fecha">Fecha</label>
+            <input class= "form__input" type="date" id="fecha" name="fecha"
+                    value="{{datos.get('fecha', '')}}">
+        </div>
+
+        <div class="form__field">
+            <label class="form__tag" for="estado">Estado</label>
+            <select class="form__select" id="estado" name="estado">
+                {% for estado in estados %}
+                    <option value="{{estado}}"{% if datos.get('estado') == estado %}selected{% endif %}>{{estado}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form__actions">
+            <button class="button button--primary" type="submit">Guardar</button>
+            <a class="button button--secondary" href="{{url_for('admin.eventos_lista')}}">Cancelar</a>
+        </div>
+    </form>
+{% endblock %}

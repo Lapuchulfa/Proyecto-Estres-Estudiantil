@@ -1,0 +1,47 @@
+@use 'variables' as *;
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: $color-superficie;
+  border: 1px solid $color-borde;
+  border-radius: $radio;
+  overflow: hidden;
+
+  &__header {
+    text-align: left;
+    padding: ($espacio * 0.75) $espacio;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: $color-texto-suave;
+    background: $color-fondo;
+    border-bottom: 1px solid $color-borde;
+  }
+
+  &__cell {
+    padding: ($espacio * 0.75) $espacio;
+    border-bottom: 1px solid $color-borde;
+  }
+
+  tbody tr:last-child &__cell {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background: rgba($color-primario, 0.04);
+  }
+
+  &__empty {
+    padding: $espacio * 2;
+    text-align: center;
+    color: $color-texto-suave;
+  }
+
+  // En pantallas pequeñas la tabla se desplaza horizontalmente en vez de romper la página
+  @media (max-width: 700px) {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}

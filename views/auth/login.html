@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='scss/admin.css')}}">
+    <title>Login In Gestion del Estrés</title>
+</head>
+<body class="page">
+    <main class="page__container page__container--center">
+        <h1 class="page__title page__title--center">Gestión del Estrés</h1>
+        {% for categoria, mensaje in get_flashed_messages(with_categories=true) %}
+            <p class="message message--{{categoria}}">{{mensaje}}</p>
+        {% endfor %}
+
+        {% if error %}
+            <p class="message message--mistake">{{error}}</p>
+        {% endif %}
+
+        <form class="form" method="POST" novalidate>
+            <div class="form__field">
+                <label class="form__tag" for="correo">Correo</label>
+                <input class="form__input" type="email" id="correo" name="correo" value="{{correo}}">
+            </div>
+
+            <div class="form__field">
+                <label class="form__tag" for="password">Contraseña</label>
+                <input class="form__input" type="password" id="password" name="password">
+            </div>
+
+            <div class="form__actions">
+                <button class="button button--primary" type="submit">Iniciar Sesión</button>
+                <a class="button button--secondary" href="{{url_for('auth.registro')}}">Registrarse</a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='scss/admin.css')}}">
+    <title>Dashboard Gestión del Estrés</title>
+</head>
+<body class="page">
+    <nav class="nav">
+        <span class="nav__brand">Gestión del Estrés</span>
+        <form method="POST" action="{{url_for('auth.logout')}}">
+            <button class="button button--secondary" type="submit">Cerrar Sesión</button>
+        </form>
+    </nav>
+
+    <main class="page__container">
+        <h1 class="page__title">Hola, {{nombre}}</h1>
+        <p>Aquí estará tu dashboard de estrés (en construcción).</p>
+    </main>
+</body>
+</html>

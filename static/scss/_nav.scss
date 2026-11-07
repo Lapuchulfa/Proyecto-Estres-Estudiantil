@@ -1,0 +1,39 @@
+@use 'variables' as *;
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $espacio * 1.5;
+  padding: $espacio ($espacio * 1.5);
+  background: $color-superficie;
+  border-bottom: 1px solid $color-borde;
+
+  &__brand {
+    margin-right: auto;
+    font-weight: 700;
+    color: $color-primario;
+  }
+
+  &__link {
+    color: $color-texto-suave;
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 2px solid transparent;
+
+    &:hover {
+      color: $color-texto;
+    }
+
+    &--active {
+      color: $color-texto;
+      font-weight: 600;
+      border-bottom-color: $color-primario;
+    }
+
+  }
+   &__user{
+      color: $color-texto-suave;
+      font-size: 0.9rem;
+    }
+}

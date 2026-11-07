@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+
+{% block titulo %}Eventos académicos{% endblock %}
+
+{% block contenido %}
+    <div class="page__header">
+        <h1 class="page__title">Eventos académicos</h1>
+        <a class="button button--primary" href="{{url_for('admin.evento_nuevo')}}">+ Nuevo evento</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="table__header">Estudiante</th>
+                <th class="table__header">Materia</th>
+                <th class="table__header">Tipo</th>
+                <th class="table__header">Peso</th>
+                <th class="table__header">Fecha</th>
+                <th class="table__header">Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ev in eventos %}
+                <tr class="table__row">
+                    <td class="table__cell">{{ev.apellido_usuario}}, {{ev.nombre_usuario}}</td>
+                    <td class="table__cell">{{ev.materia}}</td>
+                    <td class="table__cell">{{ev.tipo}}</td>
+                    <td class="table__cell">{{ev.peso}}</td>
+                    <td class="table__cell">{{ev.fecha}}</td>
+                    <td class="table__cell">{{ev.estado}}</td>
+                </tr>
+            {% else %}
+            <tr>
+                <td class="table__empty" colspan="6">No hay eventos registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='scss/admin.css') }}">
+    <title>{% block titulo %}Admin{% endblock %} · Gestión del Estrés</title>
+</head>
+<body class="page">
+    <nav class="nav">
+        <span class="nav__brand">Gestión de Estrés Admin Panel</span>
+        <a class="nav__link {% if request.endpoint.startswith('admin.usuarios') %}nav__link--active{% endif %}"
+           href="{{ url_for('admin.usuarios_lista') }}">Usuarios</a>
+        <a class="nav__link {% if request.endpoint.startswith('admin.evento') %}nav__link--active{% endif %}"
+           href="{{ url_for('admin.eventos_lista') }}">Eventos académicos</a>
+        <span class="nav__user">{{session.get('nombre')}}</span>
+        <form method="POST" action="{{url_for('auth.logout')}}">
+            <button class="button button--secondary" type="submit">Cerrar Sesión</button>
+        </form>
+    </nav>
+
+    <main class="page__container">
+        {% for categoria, mensaje in get_flashed_messages(with_categories=true) %}
+            <p class="message message--{{ categoria }}">{{ mensaje }}</p>
+        {% endfor %}
+
+        {% block contenido %}{% endblock %}
+    </main>
+</body>
+</html>

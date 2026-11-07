@@ -1,0 +1,22 @@
+@use 'variables' as *;
+
+.message {
+  max-width: 520px;
+  margin: 0 auto $espacio;
+  padding: ($espacio * 0.75) $espacio;
+  border-radius: $radio;
+  border: 1px solid transparent;
+
+  &--success {
+    color: $color-exito;
+    background: $color-exito-fondo;
+    border-color: rgba($color-exito, 0.25);
+  }
+
+  &--mistake {
+    color: $color-error;
+    background: $color-error-fondo;
+    border-color: rgba($color-error, 0.25);
+    padding-left: $espacio * 2;   // espacio para las viñetas de la lista
+  }
+}

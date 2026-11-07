@@ -1,0 +1,32 @@
+@use 'variables' as *;
+
+.button {
+  display: inline-block;
+  padding: 0.6rem 1.1rem;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: $radio;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &--primary {
+    color: #fff;
+    background: $color-primario;
+
+    &:hover {
+      background: $color-primario-hover;
+    }
+  }
+
+  &--secondary {
+    color: $color-texto;
+    background: $color-superficie;
+    border-color: $color-borde;
+
+    &:hover {
+      background: $color-fondo;
+    }
+  }
+}
