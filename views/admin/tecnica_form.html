@@ -1,0 +1,46 @@
+{% extends "admin/base.html" %}
+
+{% block titulo %}Nueva técnica{% endblock %}
+
+{% block contenido %}
+    <h1 class="page__title">Nueva técnica</h1>
+
+    {% if errores %}
+        <ul class="message message--mistake">
+            {% for error in errores %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+    {% endif %}
+
+    <form class="form" method="POST" novalidate>
+        <div class="form__field">
+            <label class="form__tag" for="arquetipo_id">Arquetipo</label>
+            <select class="form__select" id="arquetipo_id" name="arquetipo_id">
+                <option value="">-- Seleccione un arquetipo --</option>
+                {% for a in arquetipos %}
+                    <option value="{{ a.arquetipo_id }}"
+                        {% if datos.get('arquetipo_id') == a.arquetipo_id|string %}selected{% endif %}>
+                        {{ a.nombre_arquetipo }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form__field">
+            <label class="form__tag" for="nombre">Nombre de la técnica</label>
+            <input class="form__input" type="text" id="nombre" name="nombre"
+                   value="{{ datos.get('nombre', '') }}">
+        </div>
+
+        <div class="form__field">
+            <label class="form__tag" for="descripcion">Descripción</label>
+            <input class="form__input" type="text" id="descripcion" name="descripcion"
+                   value="{{ datos.get('descripcion', '') }}">
+            <small class="form__help">Máximo 255 caracteres.</small>
+        </div>
+
+        <div class="form__actions">
+            <button class="button button--primary" type="submit">Guardar</button>
+            <a class="button button--secondary" href="{{ url_for('admin.tecnicas_lista') }}">Cancelar</a>
+        </div>
+    </form>
+{% endblock %}

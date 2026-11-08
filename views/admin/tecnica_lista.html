@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+
+{% block titulo %}Técnicas{% endblock %}
+
+{% block contenido %}
+    <div class="page__header">
+        <h1 class="page__title">Técnicas de manejo del estrés</h1>
+        <a class="button button--primary" href="{{ url_for('admin.tecnica_nueva') }}">+ Nueva técnica</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="table__header">Arquetipo</th>
+                <th class="table__header">Técnica</th>
+                <th class="table__header">Descripción</th>
+                <th class="table__header">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in tecnicas %}
+                <tr class="table__row">
+                    <td class="table__cell">{{ t.nombre_arquetipo }}</td>
+                    <td class="table__cell">{{ t.nombre_tecnica }}</td>
+                    <td class="table__cell">{{ t.descripcion }}</td>
+                    <td class="table__cell">
+                        {% if t.es_predeterminada %}
+                            <span class="table__tag">Predeterminada</span>
+                        {% else %}
+                            <form method="POST"
+                                  action="{{ url_for('admin.tecnica_eliminar', tecnica_id=t.tecnicaManejoEstres_id) }}">
+                                <button class="button button--danger" type="submit">Eliminar</button>
+                            </form>
+                        {% endif %}
+                    </td>
+
+                </tr>
+            {% else %}
+                <tr><td class="table__empty" colspan="3">No hay técnicas registradas.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

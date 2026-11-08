@@ -38,6 +38,12 @@
     color: $color-texto-suave;
   }
 
+    &__tag {
+    color: $color-texto-suave;
+    font-size: 0.85rem;
+  }
+
+
   // En pantallas pequeñas la tabla se desplaza horizontalmente en vez de romper la página
   @media (max-width: 700px) {
     display: block;

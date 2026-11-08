@@ -7,8 +7,10 @@ from utils.validaciones import (
 )
 from utils.auth import exigir_rol
 from datetime import date
-from models.tecnica_manejo_model import listar_tecnica_por_arquetipo, tecnica_de_arquetipo
 from models.alerta_model import listar_alertas, crear_alerta
+from models.tecnica_manejo_model import (
+    listar_tecnica_por_arquetipo, tecnica_de_arquetipo, listar_tecnicas, existe_tecnica_en_arquetipo, crear_tecnica, obtener_tecnica, tecnica_en_uso, eliminar_tecnica
+)
 
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -111,6 +113,7 @@ def alerta_nueva():
     else:
         if not usuario_id or not estudiante_de_arquetipo(usuario_id, arquetipo_id):
             errores.append("El estudiante no pertenece al arquetipo seleccionado.")
+            
         if not tecnicaa_id or not tecnica_de_arquetipo(tecnicaa_id, arquetipo_id):
             errores.append("La técnica no corresponde al arquetipo seleccionado.")
 
@@ -124,3 +127,60 @@ def alerta_nueva():
     flash("Alerta de seguimiento creada correctamente.", "success")
     return redirect(url_for("admin.alertas_lista"))
     
+# Tecnica de manejo del estres (catalogo)
+def mostrar_formulario_tecnica(datos, errores,status=200):
+    return render_template(
+        "admin/tecnica_form.html",
+        arquetipos = listar_arquetipos(),
+        datos = datos,
+        errores = errores,
+    ), status
+    
+@admin_bp.route("/tecnicas")
+def tecnicas_lista():
+    return render_template("admin/tecnica_lista.html", tecnicas=listar_tecnicas())
+
+
+@admin_bp.route("/tecnica/nueva", methods=["GET", "POST"])
+def tecnica_nueva():
+    if request.method == "GET":
+        return mostrar_formulario_tecnica({},[])
+    
+    nombre = request.form.get("nombre", "").strip()
+    descripcion = request.form.get("descripcion","").strip()
+    arquetipo_id = request.form.get("arquetipo_id")
+    errores = []
+    
+    if not nombre or len(nombre) > 50:
+        errores.append("El nombre es obligatorio y no puede superar los 50 caracteres.")
+    
+    if not descripcion or len(descripcion) > 255:
+        errores.append("La descripción es obligatoria y no puede superar los 255 caracteres.")
+        
+    if not arquetipo_id or not existe_arquetipo(arquetipo_id):
+        errores.append("Debe seleccionar un arquetipo valido.")
+    elif nombre and existe_tecnica_en_arquetipo(nombre, arquetipo_id):
+        errores.append("Ya existe una técnica con ese nombre para este arquetipo.")
+    
+    if errores:
+        return mostrar_formulario_tecnica(request.form, errores, 400)
+    
+    crear_tecnica(nombre, descripcion, arquetipo_id)
+    flash("Técnica creada correctamente", "success")
+    return redirect(url_for("admin.tecnicas_lista"))
+
+@admin_bp.route("/tecnicas/<int:tecnica_id>/eliminar", methods=["POST"])
+def tecnica_eliminar(tecnica_id):
+    tecnica = obtener_tecnica(tecnica_id)
+
+    if not tecnica:
+        flash("La técnica no existe.", "mistake")
+    elif tecnica["es_predeterminada"]:
+        flash("Las técnicas predeterminadas no se pueden eliminar.", "mistake")
+    elif tecnica_en_uso(tecnica_id):
+        flash("No se puede eliminar: la técnica ya está asignada en una alerta.", "mistake")
+    else:
+        eliminar_tecnica(tecnica_id)
+        flash("Técnica eliminada correctamente.", "success")
+
+    return redirect(url_for("admin.tecnicas_lista"))

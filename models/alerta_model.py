@@ -30,3 +30,21 @@ def crear_alerta(mensaje, fecha, usuario_id, tecnica_id):
     conn.commit()
     cursor.close()
     conn.close()
+    
+def listar_alertas_de_usuario(usuario_id):
+    conn = obtener_conexion()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute(
+        """
+        SELECT a.fecha, a.mensaje, a.estado, t.nombre_tecnica, t.descripcion
+        FROM alerta a
+        JOIN tecnica_manejo_estres t ON t.tecnicaManejoEstres_id = a.tecnicaManejoEstres_id
+        WHERE a.usuario_id = %s
+        ORDER BY a.fecha DESC
+        """,
+        (usuario_id,)
+    )
+    alertas = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return alertas

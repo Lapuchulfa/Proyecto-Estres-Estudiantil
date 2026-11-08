@@ -29,4 +29,11 @@
       background: $color-fondo;
     }
   }
+
+    &--danger {
+    background: $color-error;
+    color: #fff;
+    border-color: $color-error;
+  }
+
 }

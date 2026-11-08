@@ -48,7 +48,7 @@ def registro():
         return redirect(ruta_inicio(session["rol"]))
     
     if request.method == "GET":
-        return render_template("auth/registro.html", aruquetipos=listar_arquetipos(), datos={}, errores=[])
+        return render_template("auth/registro.html", datos={}, errores=[])
     
     nombre = request.form.get("nombre", "").strip()
     apellido = request.form.get("apellido", "").strip()

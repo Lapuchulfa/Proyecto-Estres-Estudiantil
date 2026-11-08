@@ -16,6 +16,16 @@
 
     <main class="page__container">
         <h1 class="page__title">Hola, {{nombre}}</h1>
+        <h2>Mis alertas</h2>
+        {% for al in alertas %}
+            <div class="message message--mistake">
+                <strong>{{ al.fecha }}</strong>: {{ al.mensaje }}<br>
+                Técnica recomendada: <strong>{{ al.nombre_tecnica }}</strong>. {{ al.descripcion }}
+            </div>
+        {% else %}
+            <p>No tienes alertas. ¡Sigue así!</p>
+        {% endfor %}
+
         <p>Aquí estará tu dashboard de estrés (en construcción).</p>
     </main>
 </body>

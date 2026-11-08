@@ -107,3 +107,10 @@ INSERT INTO tecnica_manejo_estres (nombre_tecnica, descripcion, arquetipo_id) VA
 INSERT INTO usuario (nombre_usuario, apellido_usuario, correo_usuario, password_hash, rol, arquetipo_id)
 VALUES ('Admin', 'Sistema', 'admin@udla.edu.ec', 'scrypt:32768:8:1$hAacb44bqPX2bfDI$c25bd264a7d641a156e493281d816c9203f79cd5f93a531f3a3c8b9e809f7fc725f06e2f5bcd23f6e02536f710e8250f5266d05623fa53fd16be2297052e7a54', 'Administrador', NULL);
 
+ALTER TABLE tecnica_manejo_estres
+  ADD COLUMN es_predeterminada BOOLEAN NOT NULL DEFAULT FALSE;
+
+-- Marcar como predeterminadas las 20 del seed
+UPDATE tecnica_manejo_estres SET es_predeterminada = TRUE
+WHERE tecnicaManejoEstres_id <= 20;
+

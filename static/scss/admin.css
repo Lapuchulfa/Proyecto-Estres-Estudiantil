@@ -126,6 +126,10 @@ tbody tr:last-child .table__cell {
   text-align: center;
   color: #5b6b67;
 }
+.table__tag {
+  color: #5b6b67;
+  font-size: 0.85rem;
+}
 @media (max-width: 700px) {
   .table {
     display: block;
@@ -202,4 +206,9 @@ tbody tr:last-child .table__cell {
 }
 .button--secondary:hover {
   background: #f5f7f6;
+}
+.button--danger {
+  background: #b42318;
+  color: #fff;
+  border-color: #b42318;
 }/*# sourceMappingURL=admin.css.map */
