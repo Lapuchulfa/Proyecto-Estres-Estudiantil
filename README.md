@@ -3,7 +3,7 @@
 Aplicación web en **Flask (MVC)** que gestiona los datos que alimentan al core de una app de manejo del estrés académico para estudiantes universitarios.
 
 **Demo:** https://proyecto-estres-estudiantil.onrender.com
-**Video:** https://youtu.be/3tHNhoPd2OM
+**Video:** https://youtu.be/ZW-h745Nlt8
 
 ---
 
