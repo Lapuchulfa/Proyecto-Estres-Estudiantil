@@ -103,7 +103,7 @@ def alerta_nueva():
     
     arquetipo_id = request.form.get("arquetipo_id")
     usuario_id = request.form.get("usuario_id")
-    tecnicaa_id = request.form.get("tecnica_id")
+    tecnica_id = request.form.get("tecnica_id")
     mensaje = request.form.get("mensaje", "").strip()
     errores = []
     
@@ -114,7 +114,7 @@ def alerta_nueva():
         if not usuario_id or not estudiante_de_arquetipo(usuario_id, arquetipo_id):
             errores.append("El estudiante no pertenece al arquetipo seleccionado.")
             
-        if not tecnicaa_id or not tecnica_de_arquetipo(tecnicaa_id, arquetipo_id):
+        if not tecnica_id or not tecnica_de_arquetipo(tecnica_id, arquetipo_id):
             errores.append("La técnica no corresponde al arquetipo seleccionado.")
 
     if not mensaje or len(mensaje) > 100:
@@ -123,7 +123,7 @@ def alerta_nueva():
     if errores:
         return mostrar_formulario_alerta(request.form, errores, 400)
     
-    crear_alerta(mensaje, date.today(), usuario_id, tecnicaa_id)
+    crear_alerta(mensaje, date.today(), usuario_id, tecnica_id)
     flash("Alerta de seguimiento creada correctamente.", "success")
     return redirect(url_for("admin.alertas_lista"))
     
